@@ -1,0 +1,15 @@
+{
+  "name": "api-testing-pactumjs",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "mocha": "^10.4.0",
+    "pactum": "^3.7.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "scripts": {
+    "tests": "mocha ./tests/"
+  }
+}
