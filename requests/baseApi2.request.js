@@ -2,11 +2,13 @@ const { spec } = require('pactum')
 
 class BaseApi {
 
+    #baseURL // Campo privado para armazenar a URL base
+
     constructor(baseURL) {
         /**
          * @param {string} baseURL - A URL base para todas as requisições da API.
          */
-        this.baseURL = baseURL
+        this.#baseURL = baseURL
     }
 
     /**
@@ -15,7 +17,7 @@ class BaseApi {
      * @param {object} templateValues - Um objeto contendo os valores para substituir os placeholders.
      * @returns {object} O objeto JSON com os placeholders substituídos pelos valores fornecidos.
      */
-    resolveTemplate(data, templateValues) {
+    #resolveTemplate(data, templateValues) {
         if (!data || !templateValues) return data
 
         /* Converte o objeto para string para facilitar a substituição */
@@ -63,7 +65,7 @@ class BaseApi {
      * @returns {object} Uma instância configurada de `pactum.spec`.
      */
     async requestConstructor(method, endpoint, { body = null, queryParams = null, headers = null, templateValues = null, timeout = null, formData = null, files = null } = {}) {
-        const request = spec()[method.toLowerCase()](`${this.baseURL}${endpoint}`)
+        const request = spec()[method.toLowerCase()](`${this.#baseURL}${endpoint}`)
 
         if (queryParams) request.withQueryParams(queryParams)
         if (headers) request.withHeaders(headers)
@@ -71,7 +73,7 @@ class BaseApi {
 
         /* Tratamento do json body */
         if (body) {
-            const resolvedBody = this.resolveTemplate(body, templateValues)
+            const resolvedBody = this.#resolveTemplate(body, templateValues)
             request.withJson(resolvedBody)
         }
 
