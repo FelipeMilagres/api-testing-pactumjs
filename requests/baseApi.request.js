@@ -1,21 +1,39 @@
 const { spec } = require('pactum')
+const https = require('https')
+const fs = require('fs')
 
 class BaseApi {
 
-    #baseURL // Campo privado para armazenar a URL base
+    #baseURL
+    #agent
 
-    constructor(baseURL) {
+    constructor(baseURL, certOptions = {}) {
         /**
-         * @param {string} baseURL - A URL base para todas as requisições da API.
+         * @param {string} baseURL - A URL base para todas as requisições da API
+         * @param {object} certOptions - Opções para configuração de certificados
+         * @param {string} [certOptions.certPath] - Caminho para o arquivo do certificado (cert.pem)
+         * @param {string} [certOptions.keyPath] - Caminho para o arquivo da chave privada (key.pem)
+         * @param {string} [certOptions.caPath] - Caminho para o arquivo da autoridade certificadora (ca.pem)
+         * @param {boolean} [certOptions.rejectUnauthorized] - Define se erros de certificado devem ser ignorados
          */
         this.#baseURL = baseURL
+
+        /* Configura o agente HTTPS com as opções de certificado */
+        const { certPath, keyPath, caPath, rejectUnauthorized = true } = certOptions
+
+        this.#agent = new https.Agent({
+            cert: certPath ? fs.readFileSync(certPath) : undefined,
+            key: keyPath ? fs.readFileSync(keyPath) : undefined,
+            ca: caPath ? fs.readFileSync(caPath) : undefined,
+            rejectUnauthorized,
+        })
     }
 
     /**
-     * Substitui placeholders no corpo da requisição.
-     * @param {object} data - O objeto JSON contendo os placeholders no formato `@DATA:KEY@`.
-     * @param {object} templateValues - Um objeto contendo os valores para substituir os placeholders.
-     * @returns {object} O objeto JSON com os placeholders substituídos pelos valores fornecidos.
+     * Substitui placeholders no corpo da requisição
+     * @param {object} data - O objeto JSON contendo os placeholders no formato `@DATA:KEY@`
+     * @param {object} templateValues - Um objeto contendo os valores para substituir os placeholders
+     * @returns {object} O objeto JSON com os placeholders substituídos pelos valores fornecidos
      */
     #resolveTemplate(data, templateValues) {
         if (!data || !templateValues) return data
@@ -52,24 +70,32 @@ class BaseApi {
 
     /**
      * Método genérico para construir as requisições HTTP
-     * @param {string} method - O método HTTP (GET, POST, PUT, DELETE, PATCH, etc.).
-     * @param {string} endpoint - O endpoint da API (relativo à URL base).
-     * @param {object} [options] - As opções para a requisição.
-     * @param {object} [options.body] - O corpo da requisição (para POST, PUT, PATCH).
-     * @param {object} [options.queryParams] - Os parâmetros de consulta para a URL.
-     * @param {object} [options.headers] - Os cabeçalhos HTTP para a requisição.
-     * @param {object} [options.templateValues] - Valores para substituir placeholders no corpo da requisição.
-     * @param {number} [options.timeout] - Tempo limite para a requisição em milissegundos.
-     * @param {object} [options.formData] - Dados de formulário para enviar na requisição.
-     * @param {string[]} [options.files] - Lista de caminhos de arquivos para enviar.
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * @param {string} method - O método HTTP (GET, POST, PUT, DELETE, PATCH, etc.)
+     * @param {string} endpoint - O endpoint da API (relativo à URL base)
+     * @param {object} [options] - As opções para a requisição
+     * @param {object} [options.body] - O corpo da requisição (para POST, PUT, PATCH)
+     * @param {object} [options.queryParams] - Os parâmetros de consulta para a URL
+     * @param {object} [options.headers] - Os cabeçalhos HTTP para a requisição
+     * @param {object} [options.templateValues] - Valores para substituir placeholders no corpo da requisição
+     * @param {number} [options.timeout] - Tempo limite para a requisição em milissegundos
+     * @param {object} [options.formData] - Dados de formulário para enviar na requisição
+     * @param {string[]} [options.files] - Lista de caminhos de arquivos para enviar
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async requestConstructor(method, endpoint, { body = null, queryParams = null, headers = null, templateValues = null, timeout = null, formData = null, files = null } = {}) {
         const request = spec()[method.toLowerCase()](`${this.#baseURL}${endpoint}`)
 
-        if (queryParams) request.withQueryParams(queryParams)
-        if (headers) request.withHeaders(headers)
-        if (timeout) request.withRequestTimeout(timeout)
+        /* Configura o agente HTTPS */
+        request.withCore(this.#agent)
+
+        if (queryParams)
+            request.withQueryParams(queryParams)
+
+        if (headers)
+            request.withHeaders(headers)
+
+        if (timeout)
+            request.withRequestTimeout(timeout)
 
         /* Tratamento do json body */
         if (body) {
@@ -95,70 +121,70 @@ class BaseApi {
     }
 
     /**
-     * Faz uma requisição GET.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição GET
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async get(endpoint, options = {}) {
         return this.requestConstructor('GET', endpoint, options)
     }
 
     /**
-     * Faz uma requisição POST.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição POST
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async post(endpoint, options = {}) {
         return this.requestConstructor('POST', endpoint, options)
     }
 
     /**
-     * Faz uma requisição PUT.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição PUT
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async put(endpoint, options = {}) {
         return this.requestConstructor('PUT', endpoint, options)
     }
 
     /**
-     * Faz uma requisição DELETE.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição DELETE
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async delete(endpoint, options = {}) {
         return this.requestConstructor('DELETE', endpoint, options)
     }
 
     /**
-     * Faz uma requisição PATCH.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição PATCH
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async patch(endpoint, options = {}) {
         return this.requestConstructor('PATCH', endpoint, options)
     }
 
     /**
-     * Faz uma requisição HEAD.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição HEAD
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async head(endpoint, options = {}) {
         return this.requestConstructor('HEAD', endpoint, options)
     }
 
     /**
-     * Faz uma requisição OPTIONS.
-     * @param {string} endpoint - O endpoint da API.
-     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
-     * @returns {object} Uma instância configurada de `pactum.spec`.
+     * Faz uma requisição OPTIONS
+     * @param {string} endpoint - O endpoint da API
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`)
+     * @returns {object} Uma instância configurada de `pactum.spec`
      */
     async options(endpoint, options = {}) {
         return this.requestConstructor('OPTIONS', endpoint, options)

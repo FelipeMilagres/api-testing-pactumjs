@@ -1,6 +1,6 @@
 const usersData = {
     get: {
-        header: {
+        headers: {
             accept: 'application/json'
         }
     }

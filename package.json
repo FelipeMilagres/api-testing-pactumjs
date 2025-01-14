@@ -1,6 +1,7 @@
 {
   "name": "api-testing-pactumjs",
   "version": "1.0.0",
+  "license": "MIT",  
   "scripts": {
     "tests": "mocha ./tests/**/*.js"
   },
