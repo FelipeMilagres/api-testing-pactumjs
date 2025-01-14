@@ -1,5 +1,8 @@
-const baseUrl = 'https://serverest.dev'
+const urls = {
+    baseUrl: "https://serverest.dev",
+    users: "/usuarios"
+}
 
 module.exports = {
-    baseUrl
+    urls
 }

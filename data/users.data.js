@@ -1,14 +1,11 @@
-const { faker } = require("@faker-js/faker")
-
-function createRandomUser() {
-    return {
-        "nome": faker.internet.userName(),
-        "email": faker.internet.email(),
-        "password": faker.internet.password(),
-        "administrador": "true"
+const usersData = {
+    get: {
+        headers: {
+            accept: 'application/json'
+        }
     }
 }
 
 module.exports = {
-    createRandomUser
+    usersData
 }
