@@ -1,77 +1,167 @@
 const { spec } = require('pactum')
 
 class BaseApi {
+
+    #baseURL // Campo privado para armazenar a URL base
+
     constructor(baseURL) {
-        this.baseURL = baseURL
+        /**
+         * @param {string} baseURL - A URL base para todas as requisições da API.
+         */
+        this.#baseURL = baseURL
     }
 
-    resolveTemplate(data, templateValues) {
+    /**
+     * Substitui placeholders no corpo da requisição.
+     * @param {object} data - O objeto JSON contendo os placeholders no formato `@DATA:KEY@`.
+     * @param {object} templateValues - Um objeto contendo os valores para substituir os placeholders.
+     * @returns {object} O objeto JSON com os placeholders substituídos pelos valores fornecidos.
+     */
+    #resolveTemplate(data, templateValues) {
         if (!data || !templateValues) return data
 
-        const stringifiedData = JSON.stringify(data)
-        const resolvedData = stringifiedData.replace(/@DATA:([A-Z_]+)@/g, (_, key) => {
-            return templateValues[key] || `@DATA:${key}@`
-        });
+        /* Converte o objeto para string para facilitar a substituição */
+        let stringifiedData = JSON.stringify(data)
 
-        return JSON.parse(resolvedData)
-    }
+        /* Substitui placeholders no formato @DATA:KEY@ */
+        stringifiedData = stringifiedData.replace(/@DATA:([A-Z_]+)@/g, (_, key) => {
+            return templateValues[key] || `@DATA:${key}@` // Substitui ou mantém o placeholder
+        })
 
-    async get(endpoint, queryParams = null, headers = null) {
-        const request = spec().get(`${this.baseURL}${endpoint}`)
+        /* Converte de volta para JSON */
+        let resolvedData = JSON.parse(stringifiedData)
 
-        if (queryParams) {
-            request.withQueryParams(queryParams)
+        /* Aplica @OVERRIDES@ */
+        if (templateValues['@OVERRIDES@']) {
+            const overrides = templateValues['@OVERRIDES@']
+            Object.entries(overrides).forEach(([key, value]) => {
+                resolvedData[key] = value // Sobrescreve ou adiciona o valor
+            })
         }
 
-        if (headers) {
-            request.withHeaders(headers)
+        /* Aplica @REMOVES@ */
+        if (templateValues['@REMOVES@']) {
+            const removes = templateValues['@REMOVES@']
+            removes.forEach((key) => {
+                delete resolvedData[key] // Remove a chave
+            })
         }
 
-        return request
+        return resolvedData
     }
 
+    /**
+     * Método genérico para construir as requisições HTTP
+     * @param {string} method - O método HTTP (GET, POST, PUT, DELETE, PATCH, etc.).
+     * @param {string} endpoint - O endpoint da API (relativo à URL base).
+     * @param {object} [options] - As opções para a requisição.
+     * @param {object} [options.body] - O corpo da requisição (para POST, PUT, PATCH).
+     * @param {object} [options.queryParams] - Os parâmetros de consulta para a URL.
+     * @param {object} [options.headers] - Os cabeçalhos HTTP para a requisição.
+     * @param {object} [options.templateValues] - Valores para substituir placeholders no corpo da requisição.
+     * @param {number} [options.timeout] - Tempo limite para a requisição em milissegundos.
+     * @param {object} [options.formData] - Dados de formulário para enviar na requisição.
+     * @param {string[]} [options.files] - Lista de caminhos de arquivos para enviar.
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async requestConstructor(method, endpoint, { body = null, queryParams = null, headers = null, templateValues = null, timeout = null, formData = null, files = null } = {}) {
+        const request = spec()[method.toLowerCase()](`${this.#baseURL}${endpoint}`)
 
-    async post(endpoint, body = null, headers = null, templateValues = null) {
-        const request = spec().post(`${this.baseURL}${endpoint}`)
+        if (queryParams) request.withQueryParams(queryParams)
+        if (headers) request.withHeaders(headers)
+        if (timeout) request.withRequestTimeout(timeout)
 
+        /* Tratamento do json body */
         if (body) {
-            const resolvedBody = this.resolveTemplate(body, templateValues)
+            const resolvedBody = this.#resolveTemplate(body, templateValues)
             request.withJson(resolvedBody)
         }
 
-        if (headers) {
-            request.withHeaders(headers)
+        /* Tratamento do form data */
+        if (formData) {
+            Object.entries(formData).forEach(([key, value]) => {
+                request.withFormField(key, value)
+            })
+        }
+
+        /* Tratamento de arquivos */
+        if (files) {
+            files.forEach((file) => {
+                request.withFile(file)
+            })
         }
 
         return request
     }
 
-    async put(endpoint, body = null, headers = null, templateValues = null) {
-        const request = spec().put(`${this.baseURL}${endpoint}`)
-
-        if (body) {
-            const resolvedBody = this.resolveTemplate(body, templateValues)
-            request.withJson(resolvedBody)
-        }
-
-        if (headers) {
-            request.withHeaders(headers)
-        }
-
-        return request
+    /**
+     * Faz uma requisição GET.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async get(endpoint, options = {}) {
+        return this.requestConstructor('GET', endpoint, options)
     }
 
-    async delete(endpoint, queryParams = null, headers = null) {
-        const request = spec().delete(`${this.baseURL}${endpoint}`)
+    /**
+     * Faz uma requisição POST.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async post(endpoint, options = {}) {
+        return this.requestConstructor('POST', endpoint, options)
+    }
 
-        if (queryParams) {
-            request.withQueryParams(queryParams)
-        }
+    /**
+     * Faz uma requisição PUT.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async put(endpoint, options = {}) {
+        return this.requestConstructor('PUT', endpoint, options)
+    }
 
-        if (headers) {
-            request.withHeaders(headers)
-        }
-        return request
+    /**
+     * Faz uma requisição DELETE.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async delete(endpoint, options = {}) {
+        return this.requestConstructor('DELETE', endpoint, options)
+    }
+
+    /**
+     * Faz uma requisição PATCH.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async patch(endpoint, options = {}) {
+        return this.requestConstructor('PATCH', endpoint, options)
+    }
+
+    /**
+     * Faz uma requisição HEAD.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async head(endpoint, options = {}) {
+        return this.requestConstructor('HEAD', endpoint, options)
+    }
+
+    /**
+     * Faz uma requisição OPTIONS.
+     * @param {string} endpoint - O endpoint da API.
+     * @param {object} [options] - As opções para a requisição (ver método `requestConstructor`).
+     * @returns {object} Uma instância configurada de `pactum.spec`.
+     */
+    async options(endpoint, options = {}) {
+        return this.requestConstructor('OPTIONS', endpoint, options)
     }
 }
 
