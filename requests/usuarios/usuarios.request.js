@@ -7,26 +7,48 @@ class UsersRequest extends BaseApi {
     }
 
     /**
-     * Faz uma requisição GET para obter os usuários
-     * @param {object} requestData - Dados da requisição
-     * @returns {object} A resposta da requisição
+     * Obtém a lista de usuários registrados.
+     * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
+     * @returns {Promise<object>} A resposta da requisição.
      */
-    async getUsers(requestData) {
-        return await this.get(urls.users, { headers: requestData.headers })
+    async getListRegisteredUsers(requestOptions) {
+        return await this.get(urls.users, requestOptions)
     }
 
     /**
-     * Faz uma requisição POST para criar um usuário
-     * @param {object} requestData - Dados da requisição
-     * @param {object} templateValues - Valores para substituir placeholders no corpo
-     * @returns {object} A resposta da requisição
+     * Cria um novo usuário.
+     * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
+     * @returns {Promise<object>} A resposta da requisição.
      */
-    async createUser(requestData, templateValues) {
-        return await this.post(urls.users, {
-            body: requestData.body,
-            headers: requestData.header,
-            templateValues: templateValues
-        })
+    async postCreateUser(requestOptions) {
+        return await this.post(urls.users, requestOptions)
+    }
+
+    /**
+     * Busca um usuário pelo ID.
+     * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
+     * @returns {Promise<object>} A resposta da requisição.
+     */
+    async getSearchUserById(userId, requestOptions) {
+        return await this.get(`${urls.users}/${userId}`, requestOptions)
+    }
+
+    /**
+     * Remove um usuário pelo ID.
+     * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
+     * @returns {Promise<object>} A resposta da requisição.
+     */
+    async deleteUser(userId, requestOptions) {
+        return await this.delete(`${urls.users}/${userId}`, requestOptions)
+    }
+
+    /**
+     * Edita as informações de um usuário pelo ID.
+     * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
+     * @returns {Promise<object>} A resposta da requisição.
+     */
+    async putEditUser(userId, requestOptions) {
+        return await this.put(`${urls.users}/${userId}`, requestOptions)
     }
 }
 
