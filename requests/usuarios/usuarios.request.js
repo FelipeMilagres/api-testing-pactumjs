@@ -8,25 +8,20 @@ class UsersRequest extends BaseApi {
 
     /**
      * Faz uma requisição GET para obter os usuários
-     * @param {object} requestData - Dados da requisição
+     * @param {object} requestOptions - As opções para montar a requisição
      * @returns {object} A resposta da requisição
      */
-    async getUsers(requestData) {
-        return await this.get(urls.users, { headers: requestData.headers })
+    async getUsers(requestOptions) {
+        return await this.get(urls.users, requestOptions)
     }
 
     /**
      * Faz uma requisição POST para criar um usuário
-     * @param {object} requestData - Dados da requisição
-     * @param {object} templateValues - Valores para substituir placeholders no corpo
+     * @param {object} requestOptions - As opções para montar a requisição
      * @returns {object} A resposta da requisição
      */
-    async createUser(requestData, templateValues) {
-        return await this.post(urls.users, {
-            body: requestData.body,
-            headers: requestData.header,
-            templateValues: templateValues
-        })
+    async createUser(requestOptions) {
+        return await this.post(urls.users, requestOptions)
     }
 }
 
