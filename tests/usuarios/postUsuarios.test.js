@@ -2,10 +2,15 @@ const { expect } = require("pactum")
 const { usersData } = require("../../data/users.data")
 const usersRequest = require("../../requests/usuarios/usuarios.request")
 const { urls } = require("../../data/urls.data")
+const { postCreateUserSchema } = require("../../schemas/usuarios/postCreateUser.schema")
 
-describe('Testes da API - POST/usuarios', () => {
+describe('Testes da API - POST /usuarios', () => {
 
     let response
+
+    beforeEach('Reseta o body para gerar um novo usuário randômico', () => {
+        usersData.post.resetBody()
+    })
 
     it('Validar o cadastro de usuário com sucesso', async () => {
         response = await usersRequest.postCreateUser(usersData.post)
@@ -14,6 +19,7 @@ describe('Testes da API - POST/usuarios', () => {
             message: 'Cadastro realizado com sucesso',
             _id: /^[a-zA-Z0-9]+$/
         })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.created)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -26,6 +32,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ nome: 'nome não pode ficar em branco' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.name)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -38,6 +45,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ nome: 'nome deve ser uma string' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.name)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -48,6 +56,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ nome: 'nome é obrigatório' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.name)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -60,6 +69,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ email: 'email não pode ficar em branco' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.email)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -72,6 +82,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ email: 'email deve ser uma string' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.email)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -82,6 +93,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ email: 'email é obrigatório' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.email)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -94,6 +106,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ password: 'password não pode ficar em branco' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.password)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -106,6 +119,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ password: 'password deve ser uma string' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.password)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -116,6 +130,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ password: 'password é obrigatório' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.password)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -128,6 +143,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ administrador: "administrador deve ser 'true' ou 'false'" })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.administrator)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -140,6 +156,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ administrador: "administrador deve ser 'true' ou 'false'" })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.administrator)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -150,6 +167,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ administrador: 'administrador é obrigatório' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.administrator)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -162,6 +180,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.postCreateUser(usersData.post)
         expect(response).to.have.status(400)
         expect(response).to.have.jsonLike({ message: "Este email já está sendo usado" })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.message)
         expect(response).to.have.responseTimeLessThan(500)
     })
 
@@ -169,6 +188,7 @@ describe('Testes da API - POST/usuarios', () => {
         response = await usersRequest.patch(urls.users, usersData.post)
         expect(response).to.have.status(405)
         expect(response).to.have.jsonLike({ message: 'Não é possível realizar PATCH em /usuarios. Acesse https://serverest.dev para ver as rotas disponíveis e como utilizá-las.' })
+        expect(response).to.have.jsonSchema(postCreateUserSchema.badRequest.message)
         expect(response).to.have.responseTimeLessThan(500)
     })
 })

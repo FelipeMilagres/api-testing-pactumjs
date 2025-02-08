@@ -9,6 +9,8 @@ function createRandomUser() {
     }
 }
 
+let cachedUser = null
+
 const usersData = {
     get: {
         headers: {
@@ -21,9 +23,15 @@ const usersData = {
             'Content-Type': 'application/json'
         },
         get body() {
-            return createRandomUser()
+            if (!cachedUser) {
+                cachedUser = createRandomUser()
+            }
+            return cachedUser
         },
-        templateValues: null
+        templateValues: null,
+        resetBody() {
+            cachedUser = null
+        }
     }
 }
 
