@@ -4,7 +4,7 @@ const usersRequest = require("../../requests/usuarios/usuarios.request")
 const { urls } = require("../../data/urls.data")
 const { postCreateUserSchema } = require("../../schemas/usuarios/postCreateUser.schema")
 
-describe('Testes da API - POST /usuarios', () => {
+describe('@Usuarios - Testes da API - POST /usuarios', () => {
 
     let response
 

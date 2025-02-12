@@ -5,7 +5,7 @@ const { getListRegisteredUsersSchema } = require("../../schemas/usuarios/getList
 
 describe('Testes da API - GET /usuarios', () => {
 
-    it('Validar a consulta da lista de usuários com sucesso', async () => {
+    it('@Usuarios - Validar a consulta da lista de usuários com sucesso', async () => {
         const response = await usersRequest.getListRegisteredUsers(usersData.get)
         expect(response).to.have.status(200)
         expect(response).to.have.bodyContains('quantidade')

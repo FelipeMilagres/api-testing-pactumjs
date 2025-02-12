@@ -3,7 +3,8 @@
   "version": "2.0.0",
   "license": "MIT",
   "scripts": {
-    "tests": "mocha ./tests/**/*.js"
+    "tests:all": "mocha ./tests/**/*.test.js",
+    "tests:users": "mocha ./tests/**/*.test.js  --grep @Usuarios"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.3.0",
