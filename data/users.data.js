@@ -1,13 +1,7 @@
-const { faker } = require("@faker-js/faker")
+const FakerData = require("../helpers/fakerData.helpers")
+const fakerData = new FakerData()
 
-function createRandomUser() {
-    return {
-        "nome": faker.internet.username(),
-        "email": faker.internet.email(),
-        "password": faker.internet.password(),
-        "administrador": "true"
-    }
-}
+let cachedUser = null
 
 const usersData = {
     get: {
@@ -21,13 +15,28 @@ const usersData = {
             'Content-Type': 'application/json'
         },
         get body() {
-            return createRandomUser()
+            if (!cachedUser) {
+                cachedUser = fakerData.createRandomUser()
+            }
+            return cachedUser
         },
-        templateValues: null
+        templateValues: null,
+        resetBody() {
+            cachedUser = null
+        }
+    },
+    put: {
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        get body() {
+            return fakerData.createRandomUser()
+        },
+        templateValues: null,
     }
 }
 
 module.exports = {
-    createRandomUser,
     usersData
 }
