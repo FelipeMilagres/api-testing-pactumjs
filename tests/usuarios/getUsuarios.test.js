@@ -5,12 +5,21 @@ const { getListRegisteredUsersSchema } = require("../../schemas/usuarios/getList
 
 describe('Testes da API - GET /usuarios', () => {
 
-    it('@Usuarios - Validar a consulta da lista de usuários com sucesso', async () => {
-        const response = await usersRequest.getListRegisteredUsers(usersData.get)
-        expect(response).to.have.status(200)
-        expect(response).to.have.bodyContains('quantidade')
-        expect(response).to.have.bodyContains('usuarios')
-        expect(response).to.have.jsonSchema(getListRegisteredUsersSchema.ok)
-        expect(response).to.have.responseTimeLessThan(1000)
+    describe('@Usuarios-health - Health Check', () => {
+        it('Validar a saúde da API', async () => {
+            const response = await usersRequest.getListRegisteredUsers(usersData.get)
+            expect(response).to.have.status(200)
+        })
+    })
+
+    describe('@Usuarios-regras - Fluxo Operacional', () => {
+        it('Validar a consulta da lista de usuários com sucesso', async () => {
+            const response = await usersRequest.getListRegisteredUsers(usersData.get)
+            expect(response).to.have.status(200)
+            expect(response).to.have.bodyContains('quantidade')
+            expect(response).to.have.bodyContains('usuarios')
+            expect(response).to.have.jsonSchema(getListRegisteredUsersSchema.ok)
+            expect(response).to.have.responseTimeLessThan(1000)
+        })
     })
 })

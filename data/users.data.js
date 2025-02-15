@@ -33,7 +33,7 @@ const usersData = {
         get body() {
             return fakerData.createRandomUser()
         },
-        templateValues: null,
+        templateValues: null
     }
 }
 

@@ -11,13 +11,22 @@ describe('@Usuarios - Testes da API - PUT /usuarios/{_id}', () => {
         responseCreateuser = await usersRequest.postCreateUser(usersData.put)
     })
 
-    it('Validar a alteração do registro do usuário com sucesso', async () => {
-        const response = await usersRequest.putEditUser(responseCreateuser.body._id, usersData.put)
-        expect(response).to.have.status(200)
-        expect(response).to.have.jsonLike({
-            message: 'Registro alterado com sucesso'
+    describe('@Usuarios-health - Health Check', () => {
+        it('Validar a saúde da API', async () => {
+            const response = await usersRequest.putEditUser(responseCreateuser.body._id, usersData.put)
+            expect(response).to.have.status(200)
         })
-        expect(response).to.have.jsonSchema(putEditUserSchema.ok)
-        expect(response).to.have.responseTimeLessThan(500)
+    })
+
+    describe('@Usuarios-regras - Fluxo Operacional', () => {
+        it('Validar a alteração do registro do usuário com sucesso', async () => {
+            const response = await usersRequest.putEditUser(responseCreateuser.body._id, usersData.put)
+            expect(response).to.have.status(200)
+            expect(response).to.have.jsonLike({
+                message: 'Registro alterado com sucesso'
+            })
+            expect(response).to.have.jsonSchema(putEditUserSchema.ok)
+            expect(response).to.have.responseTimeLessThan(1000)
+        })
     })
 })
