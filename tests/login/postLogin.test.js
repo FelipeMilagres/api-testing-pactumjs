@@ -5,7 +5,7 @@ const loginRequest = require("../../requests/login/login.request")
 const { loginData } = require("../../data/login.data")
 const { postLoginSchema } = require("../../schemas/login/postLogin.schema")
 
-describe('@teste Testes da API - POST /login', () => {
+describe('Testes da API - POST /login', () => {
 
     let userData, responseCreateuser, response
 
@@ -186,7 +186,8 @@ describe('@teste Testes da API - POST /login', () => {
             response = await loginRequest.postLogin(loginData.post)
             expect(response).to.have.status(400)
             expect(response).to.have.jsonLike({
-                "Content-Type": "Content-Type não é permitido"
+                email: 'email é obrigatório',
+                password: 'password é obrigatório'
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
             expect(response).to.have.responseTimeLessThan(500)

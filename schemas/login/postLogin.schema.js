@@ -30,7 +30,7 @@ const postLoginSchema = {
             }
         },
         "minProperties": 1,
-        "maxProperties": 1
+        "maxProperties": 2
     }
 }
 
