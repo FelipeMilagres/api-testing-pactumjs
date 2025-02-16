@@ -175,7 +175,7 @@ describe('@teste Testes da API - POST /login', () => {
             expect(response).to.have.responseTimeLessThan(500)
         })
 
-        it('Validar no login um "content-type" inválido', async () => {
+        it('Validar no login um "Content-Type" inválido', async () => {
             loginData.post.templateValues = {
                 '@OVERRIDES@': {
                     "email": userData.email,
