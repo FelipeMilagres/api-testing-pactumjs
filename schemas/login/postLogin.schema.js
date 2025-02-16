@@ -1,19 +1,19 @@
-const postCreateUserSchema = {
-    created: {
+const postLoginSchema = {
+    ok: {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Created Schema",
+        "title": "Ok Schema",
         "type": "object",
         "properties": {
             "message": {
                 "type": "string"
             },
-            "_id": {
+            "authorization": {
                 "type": "string"
             }
         },
         "required": [
             "message",
-            "_id"
+            "authorization"
         ]
     },
     badRequest: {
@@ -35,5 +35,5 @@ const postCreateUserSchema = {
 }
 
 module.exports = {
-    postCreateUserSchema
+    postLoginSchema
 }

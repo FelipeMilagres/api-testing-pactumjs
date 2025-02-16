@@ -34,6 +34,11 @@ const usersData = {
             return fakerData.createRandomUser()
         },
         templateValues: null
+    },
+    delete: {
+        headers: {
+            accept: 'application/json'
+        }
     }
 }
 

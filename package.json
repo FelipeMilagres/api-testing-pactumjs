@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "license": "MIT",
   "scripts": {
+    "tests:all": "mocha ./tests/**/*.test.js",
     "tests:all:health": "mocha ./tests/**/*.test.js --grep @.*-health",
     "tests:all:rule": "mocha ./tests/**/*.test.js --grep @.*-regra",
     "tests:all:exceptions": "mocha ./tests/**/*.test.js --grep @.*-excecoes",
