@@ -176,11 +176,11 @@ describe('Testes da API - POST /login', () => {
         })
 
         it('Validar no login um "Content-Type" inválido', async () => {
+            loginData.post.headers["Content-Type"] = 'application/xml'
             loginData.post.templateValues = {
                 '@OVERRIDES@': {
                     "email": userData.email,
-                    "password": userData.password,
-                    "Content-Type": 'application/xml'
+                    "password": userData.password
                 }
             }
             response = await loginRequest.postLogin(loginData.post)

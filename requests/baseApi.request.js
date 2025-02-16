@@ -91,10 +91,8 @@ class BaseApi {
         if (queryParams)
             request.withQueryParams(queryParams)
 
-        if (headers) {
-            const resolvedHeaders = this.#resolveTemplate(headers, templateValues)
-            request.withHeaders(resolvedHeaders)
-        }
+        if (headers)
+            request.withHeaders(headers)
 
         if (timeout)
             request.withRequestTimeout(timeout)
