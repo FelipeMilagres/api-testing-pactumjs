@@ -1,4 +1,4 @@
-const postCreateUserSchema = {
+const postRegisterProductSchema = {
     created: {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "title": "Created Schema",
@@ -31,9 +31,22 @@ const postCreateUserSchema = {
         },
         "minProperties": 1,
         "maxProperties": 1
+    },
+    unauthorized: {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Unauthorized Schema",
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "message"
+        ]
     }
 }
 
 module.exports = {
-    postCreateUserSchema
+    postRegisterProductSchema
 }

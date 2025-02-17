@@ -1,6 +1,13 @@
 const urls = {
     baseUrl: "https://serverest.dev",
-    users: "/usuarios"
+    login: "/login",
+    users: "/usuarios",
+    products: "/produtos",
+    carts: {
+        root: "/carrinhos",
+        completePurchase: "/carrinhos/concluir-compra",
+        cancelPurchase: "/carrinhos/cancelar-compra"
+    }
 }
 
 module.exports = {

@@ -26,6 +26,7 @@ class UsersRequest extends BaseApi {
 
     /**
      * Busca um usuário pelo ID.
+     * @param {Number} userId - Identificador único do usuário.
      * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
      * @returns {Promise<object>} A resposta da requisição.
      */
@@ -35,6 +36,7 @@ class UsersRequest extends BaseApi {
 
     /**
      * Remove um usuário pelo ID.
+     * @param {Number} userId - Identificador único do usuário.
      * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
      * @returns {Promise<object>} A resposta da requisição.
      */
@@ -44,6 +46,7 @@ class UsersRequest extends BaseApi {
 
     /**
      * Edita as informações de um usuário pelo ID.
+     * @param {Number} userId - Identificador único do usuário.
      * @param {object} requestOptions - Opções para a requisição (headers, queryParams, etc.).
      * @returns {Promise<object>} A resposta da requisição.
      */
