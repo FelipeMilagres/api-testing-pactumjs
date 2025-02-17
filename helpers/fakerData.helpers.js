@@ -10,6 +10,15 @@ class FakerData {
             "administrador": "true"
         }
     }
+
+    createRandomProduct() {
+        return {
+            "nome": faker.commerce.productName(),
+            "preco": faker.number.int(),
+            "descricao": faker.commerce.productDescription(),
+            "quantidade": faker.number.int()
+        }
+    }
 }
 
 module.exports = FakerData

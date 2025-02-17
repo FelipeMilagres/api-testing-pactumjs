@@ -184,7 +184,7 @@ describe('Testes da API - POST /usuarios', () => {
         it('Validar o cadastro de usuário com e-mail já registrado', async () => {
             usersData.post.templateValues = {
                 '@OVERRIDES@': {
-                    "email": "teste@teste.com"
+                    "email": "contato@registrado.com"
                 }
             }
             response = await usersRequest.postCreateUser(usersData.post)

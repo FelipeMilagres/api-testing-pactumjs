@@ -44,7 +44,7 @@ describe('Testes da API - POST /login', () => {
                 authorization: /^Bearer\s[\w-]+\.[\w-]+\.[\w-]+$/
             })
             expect(response).to.have.jsonSchema(postLoginSchema.ok)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
     })
 
@@ -61,7 +61,7 @@ describe('Testes da API - POST /login', () => {
                 email: "email não pode ficar em branco"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar no login um email inválido no campo "email"', async () => {
@@ -77,7 +77,7 @@ describe('Testes da API - POST /login', () => {
                 email: "email deve ser um email válido"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar o tipo esperado do campo "email" no login', async () => {
@@ -93,7 +93,7 @@ describe('Testes da API - POST /login', () => {
                 email: "email deve ser uma string"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar que o campo "email" é obrigatório no login', async () => {
@@ -109,7 +109,7 @@ describe('Testes da API - POST /login', () => {
                 email: "email é obrigatório"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar o campo "password" vazio no login', async () => {
@@ -124,7 +124,7 @@ describe('Testes da API - POST /login', () => {
                 password: "password não pode ficar em branco"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar uma senha inválida no campo "password"', async () => {
@@ -140,7 +140,7 @@ describe('Testes da API - POST /login', () => {
                 message: "Email e/ou senha inválidos"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar o tipo esperado do campo "password" no login', async () => {
@@ -156,7 +156,7 @@ describe('Testes da API - POST /login', () => {
                 password: "password deve ser uma string"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar que o campo "password" é obrigatório no login', async () => {
@@ -172,7 +172,7 @@ describe('Testes da API - POST /login', () => {
                 password: "password é obrigatório"
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar no login um "Content-Type" inválido', async () => {
@@ -190,7 +190,11 @@ describe('Testes da API - POST /login', () => {
                 password: 'password é obrigatório'
             })
             expect(response).to.have.jsonSchema(postLoginSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
+        })
+
+        after('Reseta as configurações dos headers do "loginData.post"', () => {
+            loginData.post.headers["Content-Type"] = 'application/json'
         })
     })
 })

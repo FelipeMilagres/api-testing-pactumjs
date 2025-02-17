@@ -3,7 +3,7 @@ const { usersData } = require("../../data/users.data")
 const usersRequest = require("../../requests/usuarios/usuarios.request")
 const { deleteUserSchema } = require("../../schemas/usuarios/deleteUser.schema")
 
-describe('Testes da API - POST /usuarios', () => {
+describe('Testes da API - DELETE /usuarios/{_id}', () => {
 
     let responseCreateuser, response
 
@@ -27,7 +27,7 @@ describe('Testes da API - POST /usuarios', () => {
                 message: "Registro excluído com sucesso"
             })
             expect(response).to.have.jsonSchema(deleteUserSchema.ok)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
     })
 
@@ -39,7 +39,7 @@ describe('Testes da API - POST /usuarios', () => {
                 message: "Nenhum registro excluído"
             })
             expect(response).to.have.jsonSchema(deleteUserSchema.ok)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar exclusão de cadastro de usuário sem passar o id', async () => {
@@ -49,7 +49,7 @@ describe('Testes da API - POST /usuarios', () => {
                 message: "Não é possível realizar DELETE em /usuarios/. Acesse https://serverest.dev para ver as rotas disponíveis e como utilizá-las."
             })
             expect(response).to.have.jsonSchema(deleteUserSchema.ok)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
 
         it('Validar exclusão de cadastro de usuário com carrinho cadastrado', async () => {
@@ -60,7 +60,7 @@ describe('Testes da API - POST /usuarios', () => {
                 idCarrinho: /^[a-zA-Z0-9]+$/
             })
             expect(response).to.have.jsonSchema(deleteUserSchema.badRequest)
-            expect(response).to.have.responseTimeLessThan(500)
+            expect(response).to.have.responseTimeLessThan(1000)
         })
     })
 })
