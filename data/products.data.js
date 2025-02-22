@@ -1,4 +1,4 @@
-const FakerData = require("../helpers/fakerData.helpers")
+const FakerData = require("../helpers/fakerData.helper")
 const fakerData = new FakerData()
 
 const productsData = {

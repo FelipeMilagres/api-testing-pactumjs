@@ -15,10 +15,7 @@
     "tests:users:exceptions": "mocha ./tests/**/*.test.js --grep @Usuarios-excecoes",
     "tests:products:health": "mocha ./tests/**/*.test.js --grep @Produtos-health",
     "tests:products:rule": "mocha ./tests/**/*.test.js --grep @Produtos-regra",
-    "tests:products:exceptions": "mocha ./tests/**/*.test.js --grep @Produtos-excecoes",
-    "tests:carts:health": "mocha ./tests/**/*.test.js --grep @Carrinhos-health",
-    "tests:carts:rule": "mocha ./tests/**/*.test.js --grep @Carrinhos-regra",
-    "tests:carts:exceptions": "mocha ./tests/**/*.test.js --grep @Carrinhos-excecoes"
+    "tests:products:exceptions": "mocha ./tests/**/*.test.js --grep @Produtos-excecoes"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.5.0",
