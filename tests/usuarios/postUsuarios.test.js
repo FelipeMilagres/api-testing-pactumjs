@@ -187,6 +187,7 @@ describe('Testes da API - POST /usuarios', () => {
                     "email": "contato@registrado.com"
                 }
             }
+            await usersRequest.postCreateUser(usersData.post)
             response = await usersRequest.postCreateUser(usersData.post)
             expect(response).to.have.status(400)
             expect(response).to.have.jsonLike({ message: "Este email já está sendo usado" })
