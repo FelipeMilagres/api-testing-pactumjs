@@ -2,7 +2,7 @@ const { spec } = require('pactum')
 const https = require('https')
 const fs = require('fs')
 
-class BaseApi {
+class BaseApiRequest {
 
     #baseURL
     #agent
@@ -191,4 +191,4 @@ class BaseApi {
     }
 }
 
-module.exports = BaseApi
+module.exports = BaseApiRequest

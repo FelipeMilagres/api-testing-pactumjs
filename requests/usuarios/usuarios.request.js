@@ -1,7 +1,7 @@
-const BaseApi = require("../baseApi.request")
+const BaseApiRequest = require("../baseApi.request")
 const { urls } = require("../../data/urls.data")
 
-class UsersRequest extends BaseApi {
+class UsersRequest extends BaseApiRequest {
     constructor() {
         super(urls.baseUrl)
     }
