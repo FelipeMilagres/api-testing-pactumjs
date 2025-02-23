@@ -1,0 +1,13 @@
+{
+    "reporter": "mochawesome",
+    "reporter-option": [
+        "reportDir=reports",
+        "reportFilename=api-testing-pactumjs-report",
+        "charts=true",
+        "quiet=true",
+        "overwrite=true",
+        "html=true",
+        "inlineAssets=true",
+        "json=false"
+    ]
+}

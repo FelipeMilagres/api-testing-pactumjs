@@ -4,7 +4,7 @@ const usersRequest = require("../../requests/usuarios/usuarios.request")
 const { getSearchUserByIdSchema } = require("../../schemas/usuarios/getSearchUserById.schema")
 const { urls } = require("../../data/urls.data")
 
-describe('@Usuarios - Testes da API - GET /usuarios/{_id}', () => {
+describe('Testes da API - GET /usuarios/{_id}', () => {
 
     let response
 

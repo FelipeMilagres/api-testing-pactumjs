@@ -3,7 +3,7 @@ const { usersData } = require("../../data/users.data")
 const usersRequest = require("../../requests/usuarios/usuarios.request")
 const { putEditUserSchema } = require("../../schemas/usuarios/putEditUser.schema")
 
-describe('@Usuarios - Testes da API - PUT /usuarios/{_id}', () => {
+describe('Testes da API - PUT /usuarios/{_id}', () => {
 
     let responseCreateuser, response
 
